@@ -11,7 +11,7 @@ Alternatively you can also enter a byte array as input to turn it back into an i
 You can download and view the `index.html` file locally, or visit the online version at http://phaniraja-ece.github.io/image2cppand/
 
 ### Example Arduino code
-You can find a simple Arduino example sketch [over here](https://github.com/javl/image2cpp/blob/master/oled_example/oled_example.ino) in the repository.
+You can find a simple Arduino example sketch [over here](https://github.com/phaniraja-ece/phaniraja-ece.github.io/image2cpp/blob/master/oled_example/oled_example.ino) in the repository.
 
 ### Screen types
 I wrote the code with my 128x64 pixel monochrome OLED display in mind, but it should work with most similar displays. You might need to change some export settings; those are explained in the tool.
