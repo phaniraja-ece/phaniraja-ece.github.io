@@ -12,24 +12,24 @@
 
   <input type="file" id="imageInput" accept="image/*"><br>
 
-  <label for="format">Output Format:</label>
-  <select id="format">
-    <option value="progmem">PROGMEM</option>
-    <option value="uint8">uint8_t</option>
-    <option value="hex">Hex Array</option>
-  </select><br>
+  <div class="controls">
+    <select id="format">
+      <option value="progmem">PROGMEM</option>
+      <option value="uint8">uint8_t</option>
+      <option value="hex">Hex Array</option>
+    </select>
 
-  <label><input type="checkbox" id="invert"> Invert Colors</label><br>
+    <label><input type="checkbox" id="invert"> Invert</label>
 
-  <label for="threshold">Threshold: <span id="thresholdValue">50%</span></label><br>
-  <input type="range" id="threshold" min="0" max="255" value="128"><br>
+    <label for="threshold">Threshold: <span id="thresholdValue">50%</span></label>
+    <input type="range" id="threshold" min="0" max="255" value="128">
+  </div>
 
   <button onclick="convertImage()">Convert</button>
   <button onclick="resetForm()">Reset</button>
 
   <canvas id="preview" width="128" height="64"></canvas>
 
-  <h2>Output</h2>
   <textarea id="output" rows="10" cols="60" readonly></textarea>
 
   <script src="script.js"></script>
