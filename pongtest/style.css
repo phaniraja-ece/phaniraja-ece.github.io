@@ -1,0 +1,23 @@
+body {
+    background: #23272f;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+#pongCanvas {
+    background: #11151c;
+    display: block;
+    margin: 0 auto 30px auto;
+    border: 3px solid #555;
+    border-radius: 8px;
+    box-shadow: 0 0 16px #000;
+}
