@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LCD Character Designer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔲 LCD Character Designer</h1>
+    <p>Create custom 5x8 characters for 16x2 LCD modules</p>
+
+    <div class="grid" id="lcdGrid"></div>
+
+    <div class="buttons">
+      <button onclick="clearGrid()">Clear</button>
+      <button onclick="invertGrid()">Invert</button>
+    </div>
+
+    <h2>Arduino Code</h2>
+    <textarea id="output" rows="10" cols="60" readonly></textarea>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
