@@ -2,8 +2,16 @@ body {
   background: #0D1117;
   color: #C9D1D9;
   font-family: "Segoe UI", sans-serif;
-  text-align: center;
+  margin: 0;
   padding: 2em;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
 }
 
 h1 {
@@ -16,16 +24,38 @@ p {
   margin-bottom: 1.5em;
 }
 
-input, select, button, textarea {
-  margin: 0.5em;
-  padding: 0.5em;
-  font-size: 1em;
+.card {
+  background: #161B22;
+  padding: 2em;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  margin-bottom: 2em;
+}
+
+input[type="file"],
+select,
+input[type="range"] {
+  width: 100%;
+  margin: 0.5em 0;
+  padding: 0.6em;
   border-radius: 6px;
   border: none;
+  background: #0D1117;
+  color: #C9D1D9;
 }
 
 .controls {
-  margin-bottom: 1em;
+  text-align: left;
+  margin-top: 1em;
+}
+
+.controls label {
+  display: block;
+  margin: 0.5em 0 0.2em;
+}
+
+.buttons {
+  margin-top: 1em;
 }
 
 button {
@@ -37,6 +67,7 @@ button {
   border-radius: 8px;
   font-size: 1em;
   cursor: pointer;
+  border: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -50,14 +81,17 @@ button:active {
 }
 
 canvas {
-  margin-top: 1em;
+  margin: 1em auto;
+  display: block;
   border: 1px solid #C9D1D9;
 }
 
 textarea {
-  width: 90%;
-  max-width: 600px;
+  width: 100%;
   background: #161B22;
   color: #C9D1D9;
   border: 1px solid #30363D;
+  border-radius: 8px;
+  padding: 1em;
+  font-family: monospace;
 }
