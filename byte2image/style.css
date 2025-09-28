@@ -38,17 +38,24 @@ textarea {
 
 .controls {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 1em;
   margin-bottom: 1em;
 }
 
-select {
+select, input[type="checkbox"] {
   background: #0D1117;
   color: #C9D1D9;
   border: 1px solid #30363D;
   border-radius: 6px;
   padding: 0.5em;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 button {
