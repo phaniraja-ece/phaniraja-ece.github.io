@@ -2,3 +2,18 @@
 ---
 
 @import "jekyll-theme-midnight";
+.btn {
+  display: inline-block;
+  padding: 0.6em 1.2em;
+  margin: 1em 0;
+  background-color: #2ea44f;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #22863a;
+}
