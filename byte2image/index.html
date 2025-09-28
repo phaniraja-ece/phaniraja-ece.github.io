@@ -24,11 +24,14 @@
         <option value="64">64</option>
         <option value="32">32</option>
       </select>
+
+      <label><input type="checkbox" id="vertical"> Vertical Byte Layout</label>
     </div>
 
     <div class="buttons">
       <button onclick="renderImage()">Render</button>
       <button onclick="clearCanvas()">Clear</button>
+      <button onclick="downloadImage()">Download PNG</button>
     </div>
 
     <canvas id="canvas" width="128" height="64"></canvas>
