@@ -7,7 +7,7 @@ title: Scripts Dashboard
 
 #  Scripts Dashboard
 
-Also note that this currently only works on windows 
+Also note that this currently only works on Windows. 
 
 Welcome to your scripts hub. Choose a Script below:
 
