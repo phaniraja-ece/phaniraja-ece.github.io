@@ -14,3 +14,4 @@ Bookmark this to keep an eye on my project updates!
 [Tools](/tools/){: .btn}
 [Games](/games/){: .btn}
 [Code Editors](/codeeditors/){: .btn}
+[Scripts](/Scripts?){: .btn}
