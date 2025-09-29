@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web Notepad++</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Web Notepad++</h1>
+
+    <div class="tabs" id="tabs"></div>
+
+    <div class="controls">
+      <select id="language"></select>
+      <select id="theme">
+        <option value="monokai">Monokai</option>
+        <option value="github">GitHub</option>
+        <option value="twilight">Twilight</option>
+        <option value="solarized_light">Solarized Light</option>
+      </select>
+
+      <button onclick="addTab()">➕ New Tab</button>
+      <button onclick="saveCode()">💾 Save</button>
+      <button onclick="copyCode()">📋 Copy</button>
+      <button onclick="clearCode()">🧹 Clear</button>
+    </div>
+
+    <div id="editor">// Write your code here</div>
+
+    <script src="script.js"></script>
+  </div>
+</body>
+</html>
