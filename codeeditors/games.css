@@ -1,0 +1,25 @@
+.tool-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5em;
+  margin-top: 2em;
+  justify-items: center;
+}
+
+.tools-button {
+  background-color: #2ea44f;
+  color: white;
+  font-weight: bold;
+  padding: 0.8em 1.6em;
+  font-size: 1.1em;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 260px;
+  text-align: center;
+}
+
+.tools-button:hover {
+  background-color: #22863a;
+  transform: scale(1.05);
+}
