@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Web Notepad++</title>
+  <title>Web IDE</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>📝 Web Notepad++</h1>
+    <h1>🧠 Web IDE</h1>
 
     <div class="tabs" id="tabs"></div>
 
@@ -21,13 +21,21 @@
         <option value="solarized_light">Solarized Light</option>
       </select>
 
+      <input type="file" id="fileInput" />
       <button onclick="addTab()">➕ New Tab</button>
       <button onclick="saveCode()">💾 Save</button>
+      <button onclick="downloadCode()">📥 Download</button>
       <button onclick="copyCode()">📋 Copy</button>
       <button onclick="clearCode()">🧹 Clear</button>
+      <button onclick="previewCode()">🔍 Preview</button>
     </div>
 
     <div id="editor">// Write your code here</div>
+
+    <h2>🖥️ Terminal (Simulated)</h2>
+    <textarea id="terminal" readonly></textarea>
+
+    <iframe id="preview" style="display:none;"></iframe>
 
     <script src="script.js"></script>
   </div>
