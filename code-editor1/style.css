@@ -1,0 +1,54 @@
+body {
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 2em;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 1em;
+}
+
+.controls {
+  margin-bottom: 1em;
+}
+
+label {
+  margin-right: 0.5em;
+  font-weight: bold;
+  color: #58a6ff;
+}
+
+select, button {
+  margin: 0.5em;
+  padding: 0.6em;
+  font-size: 1em;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  background-color: #2ea44f;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #22863a;
+  transform: scale(1.05);
+}
+
+#editor {
+  height: 500px;
+  width: 100%;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+}
