@@ -3,7 +3,7 @@ layout: default
 title: Tools Dashboard
 ---
 
-<link rel="stylesheet" href="/tools/tools.scss">
+<link rel="stylesheet" href="/tools/tools.css">
 
 # 🛠 Tools Dashboard
 
