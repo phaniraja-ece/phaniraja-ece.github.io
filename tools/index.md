@@ -15,7 +15,7 @@ Welcome to your utility hub. Choose a tool below:
   <a href="/tools/html-preview/" class="tools-button">Preview HTML</a>
   <a href="/image2cpp/" class="tools-button">Image 2 Arduino CPP Converter</a>
   <a href="/JAVA-COMPILER/" class="tools-button">Java Compiler Launcher</a>
-  <a href="/tools/js-runner/" class="tools-button">JavascriptJS Runner</a>
+  <a href="/tools/js-runner/" class="tools-button">Javascript (JS) Runner</a>
   <a href="/lcdchar/" class="tools-button">LCD Character Designer For Non-I2C</a>
   <a href="/LcdChar_I2C/" class="tools-button">LCD Character Designer For I2C</a>
   <a href="/PYTHON-COMPILER/" class="tools-button">Python Compiler Launcher</a>
