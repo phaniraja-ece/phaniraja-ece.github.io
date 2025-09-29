@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Python to EXE Launcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>🐍 Python to EXE Launcher</h1>
+
+    <div class="input-group">
+      <label for="fileInput">📁 Choose a Python file:</label>
+      <input type="file" id="fileInput" accept=".py">
+    </div>
+
+    <div class="input-group">
+      <label for="flags">⚙️ PyInstaller Flags:</label>
+      <select id="flags">
+        <option value="">(no flags)</option>
+        <option value="--onefile">Bundle into one .exe (--onefile)</option>
+        <option value="--noconsole">Hide console (--noconsole)</option>
+        <option value="--windowed">Windowed app (--windowed)</option>
+      </select>
+    </div>
+
+    <div class="editor-label">📝 Code Editor:</div>
+    <div id="editor"></div>
+
+    <button onclick="generateScript()">Generate Compile Script</button>
+    <p id="platformInfo"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
