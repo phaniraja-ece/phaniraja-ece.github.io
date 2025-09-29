@@ -11,6 +11,6 @@ Welcome to your gaming hub. Choose a game below:
 
 <div class="game-buttons">
   <a href="/pongtest/" class="tools-button">Simple Pong Game</a>
-  <a href="/games/maze/" class="tools-button">Maze Game</a>
+  <a href="/games/Maze/" class="tools-button">Maze Game</a>
 </div>
 
