@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScript Runner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>⚙️ JavaScript Runner</h1>
+  <textarea id="jsInput" placeholder="Write your JavaScript here..."></textarea>
+  <button onclick="runJS()">Run</button>
+  <pre id="output"></pre>
+
+  <script>
+    function runJS() {
+      const code = document.getElementById("jsInput").value;
+      try {
+        const result = eval(code);
+        document.getElementById("output").textContent = result ?? "✅ Executed successfully.";
+      } catch (err) {
+        document.getElementById("output").textContent = "❌ Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
