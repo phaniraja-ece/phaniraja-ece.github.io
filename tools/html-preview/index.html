@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Preview</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🔍 HTML Live Preview</h1>
+  <textarea id="htmlInput" placeholder="Write your HTML here..."></textarea>
+  <button onclick="renderPreview()">Preview</button>
+  <iframe id="previewFrame"></iframe>
+
+  <script>
+    function renderPreview() {
+      const html = document.getElementById("htmlInput").value;
+      document.getElementById("previewFrame").srcdoc = html;
+    }
+  </script>
+</body>
+</html>
