@@ -9,7 +9,7 @@ let currentTab = null;
 const languageSelect = document.getElementById("language");
 const themeSelect = document.getElementById("theme");
 
-// Populate language options
+// Supported languages (Notepad++ style)
 const languages = [
   "c_cpp", "java", "python", "html", "css", "javascript", "php", "sql", "json",
   "xml", "markdown", "bash", "powershell", "lua", "r", "matlab", "dockerfile",
