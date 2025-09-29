@@ -12,5 +12,4 @@ Bookmark this to keep an eye on my project updates!
 ## 🛠 Tools and 🎮 Games
 
 -[Tools](/tools/){: .btn}
-<div class="tools-spacer"></div>
 -[Games](/games/){: .btn}
