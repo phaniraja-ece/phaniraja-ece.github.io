@@ -1,7 +1,7 @@
 .tool-buttons {
   display: grid;
   grid-template-columns: repeat(3, 1fr); // 3 buttons per row
-  gap: 1.5em;                            // spacing between buttons (both vertical and horizontal)
+  gap: 1.5em;                            // vertical + horizontal spacing
   margin-top: 2em;
   justify-items: center;
 }
