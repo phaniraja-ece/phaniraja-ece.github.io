@@ -3,7 +3,7 @@ layout: default
 title: Code Dashboard
 ---
 
-<link rel="stylesheet" href="/games/games.css">
+<link rel="stylesheet" href="/codeeditors/codeeditors.css">
 
 # 🧠 Code Editor Dashboard
 
