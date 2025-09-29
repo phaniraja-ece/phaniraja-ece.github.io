@@ -7,7 +7,7 @@ title: Code Dashboard
 
 # 🧠 Code Editor Dashboard
 
-Welcome to your gaming hub. Choose a game below:
+Welcome to your coding hub. Choose a code editor below:
 
 <div class="game-buttons">
   <a href="/code-editor1/" class="tools-button">Simple Code Editor</a>
