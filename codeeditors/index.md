@@ -1,16 +1,16 @@
 ---
 layout: default
-title: Games Dashboard
+title: Code Dashboard
 ---
 
 <link rel="stylesheet" href="/games/games.css">
 
-# 🎮 Game Dashboard
+# 🧠 Code Editor Dashboard
 
 Welcome to your gaming hub. Choose a game below:
 
 <div class="game-buttons">
-  <a href="/pongtest/" class="tools-button">Simple Pong Game</a>
-  <a href="/games/Maze/" class="tools-button">Maze Game</a>
+  <a href="/code-editor1/" class="tools-button">Simple Code Editor</a>
+  <a href="/codeeditors/likenpp/" class="tools-button">Like Notepad++</a>
 </div>
 
