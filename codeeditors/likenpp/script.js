@@ -129,3 +129,21 @@ window.onload = () => {
     addTab();
   }
 };
+function launchCompiler() {
+  const lang = languageSelect.value;
+  let url = "";
+
+  if (lang === "c_cpp") url = "/C-C++_COMPILER/";
+  else if (lang === "java") url = "/JAVA-COMPILER/";
+  else if (lang === "python") url = "/tools/PYTHON-COMPILER/";
+  else if (lang === "html") url = "/tools/html-preview";
+  else if (lang === "javascript") url = "/tools/js-runner";
+
+  if (url) {
+    window.open(url, "_blank");
+    terminal.value = `🚀 Launched ${lang.toUpperCase()} compiler.`;
+  } else {
+    terminal.value = `⚠️ No compiler available for ${lang.toUpperCase()}.`;
+  }
+}
+
