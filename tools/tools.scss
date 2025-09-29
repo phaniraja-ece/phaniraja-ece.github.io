@@ -1,0 +1,26 @@
+.tool-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  margin-top: 2em;
+}
+
+.tools-button {
+  display: inline-block;
+  background-color: #2ea44f;
+  color: white;
+  font-weight: bold;
+  padding: 0.8em 1.6em;
+  font-size: 1.1em;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 260px;
+  text-align: center;
+}
+
+.tools-button:hover {
+  background-color: #22863a;
+  transform: scale(1.05);
+}
