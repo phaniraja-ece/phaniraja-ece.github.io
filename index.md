@@ -11,5 +11,5 @@ Bookmark this to keep an eye on my project updates!
 
 ## 🛠 Tools and 🎮 Games
 
--[Tools](/tools/){: .btn}
--[Games](/games/){: .btn}
+[Tools](/tools/){: .btn}
+[Games](/games/){: .btn}
