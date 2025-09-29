@@ -11,6 +11,5 @@ Bookmark this to keep an eye on my project updates!
 
 ## 🛠 Tools
 
-- [Image2CPP Converter](/image2cpp/)
-- [LCD Character Designer](/lcdchar/)
-- [Byte Array to Image](/byte2image/)
+- [Tools](/tools/)
+- [Games](/games/)
