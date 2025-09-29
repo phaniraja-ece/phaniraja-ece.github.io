@@ -8,8 +8,10 @@ let currentTab = null;
 
 const languageSelect = document.getElementById("language");
 const themeSelect = document.getElementById("theme");
+const terminal = document.getElementById("terminal");
+const preview = document.getElementById("preview");
 
-// Supported languages (Notepad++ style)
+// Supported languages
 const languages = [
   "c_cpp", "java", "python", "html", "css", "javascript", "php", "sql", "json",
   "xml", "markdown", "bash", "powershell", "lua", "r", "matlab", "dockerfile",
@@ -65,22 +67,54 @@ themeSelect.addEventListener("change", () => {
 function saveCode() {
   if (currentTab) {
     tabs[currentTab].code = editor.getValue();
-    localStorage.setItem("npp-tabs", JSON.stringify(tabs));
-    alert("Code saved!");
+    localStorage.setItem("webide-tabs", JSON.stringify(tabs));
+    terminal.value = "💾 Code saved to localStorage.";
   }
 }
 
 function copyCode() {
   navigator.clipboard.writeText(editor.getValue());
-  alert("Code copied to clipboard!");
+  terminal.value = "📋 Code copied to clipboard.";
 }
 
 function clearCode() {
   editor.setValue("", -1);
+  terminal.value = "🧹 Editor cleared.";
 }
 
+function downloadCode() {
+  const blob = new Blob([editor.getValue()], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = currentTab + "." + languageSelect.value.replace("_", ".");
+  link.click();
+  terminal.value = "📥 Code downloaded.";
+}
+
+function previewCode() {
+  if (languageSelect.value === "html") {
+    preview.style.display = "block";
+    preview.srcdoc = editor.getValue();
+    terminal.value = "🔍 HTML preview loaded.";
+  } else {
+    preview.style.display = "none";
+    terminal.value = "⚠️ Preview only works for HTML.";
+  }
+}
+
+document.getElementById("fileInput").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    editor.setValue(reader.result, -1);
+    terminal.value = `📂 Loaded file: ${file.name}`;
+  };
+  reader.readAsText(file);
+});
+
 window.onload = () => {
-  const saved = localStorage.getItem("npp-tabs");
+  const saved = localStorage.getItem("webide-tabs");
   if (saved) {
     const loadedTabs = JSON.parse(saved);
     Object.keys(loadedTabs).forEach(tabId => {
