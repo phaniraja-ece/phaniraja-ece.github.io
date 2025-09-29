@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Java Compiler Launcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>☕ Java Compiler Launcher</h1>
+
+    <div class="input-group">
+      <label for="fileInput">📁 Choose a Java file:</label>
+      <input type="file" id="fileInput" accept=".java">
+    </div>
+
+    <div class="input-group">
+      <label for="flags">⚙️ javac Flags:</label>
+      <select id="flags">
+        <option value="">(no flags)</option>
+        <option value="-g">Include debug info (-g)</option>
+        <option value="-Xlint">Enable warnings (-Xlint)</option>
+      </select>
+    </div>
+
+    <div class="editor-label">📝 Code Editor:</div>
+    <div id="editor"></div>
+
+    <button onclick="generateScript()">Generate Compile Script</button>
+    <p id="platformInfo"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
