@@ -9,7 +9,6 @@ let currentTab = null;
 const languageSelect = document.getElementById("language");
 const themeSelect = document.getElementById("theme");
 const terminal = document.getElementById("terminal");
-const preview = document.getElementById("preview");
 
 // Supported languages
 const languages = [
@@ -91,27 +90,27 @@ function downloadCode() {
   terminal.value = "📥 Code downloaded.";
 }
 
-function previewCode() {
-  if (languageSelect.value === "html") {
-    preview.style.display = "block";
-    preview.srcdoc = editor.getValue();
-    terminal.value = "🔍 HTML preview loaded.";
-  } else {
-    preview.style.display = "none";
-    terminal.value = "⚠️ Preview only works for HTML.";
-  }
+function exportCodeAs(ext) {
+  const blob = new Blob([editor.getValue()], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = currentTab + "." + ext;
+  link.click();
+  terminal.value = `📤 Exported as .${ext}`;
 }
 
-document.getElementById("fileInput").addEventListener("change", e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    editor.setValue(reader.result, -1);
-    terminal.value = `📂 Loaded file: ${file.name}`;
-  };
-  reader.readAsText(file);
-});
+function checkSyntax() {
+  const code = editor.getValue();
+  const lang = languageSelect.value;
+
+  if (lang === "python" && code.includes("print(") === false) {
+    terminal.value = "⚠️ Python: Missing print statement.";
+  } else if (lang === "c_cpp" && code.includes(";") === false) {
+    terminal.value = "⚠️ C/C++: Missing semicolon.";
+  } else {
+    terminal.value = "✅ No obvious syntax issues detected.";
+  }
+}
 
 window.onload = () => {
   const saved = localStorage.getItem("webide-tabs");
