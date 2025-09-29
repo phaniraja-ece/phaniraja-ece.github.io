@@ -1,13 +1,15 @@
 ---
 layout: default
-title: Games Dashboard
+title: Scripts Dashboard
 ---
 
-<link rel="stylesheet" href="/games/games.css">
+<link rel="stylesheet" href="/Scripts/Scripts.css">
 
-# 🎮 Game Dashboard
+#  Scripts Dashboard
 
-Welcome to your gaming hub. Choose a game below:
+Also note that this currently only works on windows 
+
+Welcome to your scripts hub. Choose a Script below:
 
 <div class="game-buttons">
   <a href="/Script/SHA256.bat/" class="tools-button">SHA256 Script</a>
