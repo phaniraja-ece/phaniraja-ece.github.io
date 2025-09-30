@@ -15,8 +15,45 @@ const languages = [
   "c_cpp", "java", "python", "html", "css", "javascript", "php", "sql", "json",
   "xml", "markdown", "bash", "powershell", "lua", "r", "matlab", "dockerfile",
   "typescript", "golang", "ruby", "perl", "swift", "kotlin", "scss", "ini",
-  "makefile", "latex", "assembly_x86", "vhdl"
+  "makefile", "latex", "assembly_x86", "vhdl", "batchfile"
 ];
+
+function getExtension(lang) {
+  const map = {
+    c_cpp: "c",
+    java: "java",
+    python: "py",
+    html: "html",
+    css: "css",
+    javascript: "js",
+    php: "php",
+    sql: "sql",
+    json: "json",
+    xml: "xml",
+    markdown: "md",
+    bash: "sh",
+    powershell: "ps1",
+    batchfile: "bat",
+    lua: "lua",
+    r: "r",
+    matlab: "m",
+    dockerfile: "Dockerfile",
+    typescript: "ts",
+    golang: "go",
+    ruby: "rb",
+    perl: "pl",
+    swift: "swift",
+    kotlin: "kt",
+    scss: "scss",
+    ini: "ini",
+    makefile: "Makefile",
+    latex: "tex",
+    assembly_x86: "asm",
+    vhdl: "vhdl"
+  };
+  return map[lang] || lang.replace("_", ".");
+}
+
 
 languages.forEach(lang => {
   const opt = document.createElement("option");
@@ -82,22 +119,24 @@ function clearCode() {
 }
 
 function downloadCode() {
+  const ext = getExtension(languageSelect.value);
   const blob = new Blob([editor.getValue()], { type: "text/plain" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = currentTab + "." + languageSelect.value.replace("_", ".");
+  link.download = `${currentTab}.${ext}`;
   link.click();
-  terminal.value = "📥 Code downloaded.";
+  terminal.value = `📥 Code downloaded as .${ext}`;
 }
 
 function exportCodeAs(ext) {
   const blob = new Blob([editor.getValue()], { type: "text/plain" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = currentTab + "." + ext;
+  link.download = `${currentTab}.${ext}`;
   link.click();
   terminal.value = `📤 Exported as .${ext}`;
 }
+
 
 function checkSyntax() {
   const code = editor.getValue();
