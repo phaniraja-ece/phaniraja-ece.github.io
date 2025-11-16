@@ -1,6 +1,5 @@
 /* global Chess, Chessground */
 (function () {
-  // --- Engine setup ---
   let engine;
   function initEngine() {
     if (engine) engine.terminate();
@@ -8,15 +7,12 @@
     engine.postMessage('uci');
   }
 
-  // Movetime-based analysis (safe, non-blocking)
   function analyseFen(fen, movetime = 300, multipv = 1) {
     return new Promise((resolve) => {
-      let bestScore = 0;
-      let bestMove = null;
-      let pv = [];
+      let bestScore = 0, bestMove = null, pv = [];
 
       const onMessage = (e) => {
-        const text = typeof e.data === 'string' ? e.data : '';
+        const text = e.data;
         if (text.startsWith('info')) {
           const scoreMatch = text.match(/score (cp|mate) (-?\d+)/);
           if (scoreMatch) {
@@ -39,12 +35,10 @@
       engine.postMessage(`position fen ${fen}`);
       engine.postMessage(`setoption name MultiPV value ${multipv}`);
       engine.postMessage(`go movetime ${movetime}`);
-      // safety cutoff
       setTimeout(() => engine.postMessage('stop'), movetime + 100);
     });
   }
 
-  // --- Classification ---
   function classify(cpl, mateFlag) {
     if (mateFlag) return { label: 'Blunder', sym: '??', cls: 'blunder' };
     if (cpl <= 8) return { label: 'Great', sym: '=', cls: 'great' };
@@ -63,13 +57,11 @@
     return null;
   }
 
-  // --- Eval bar mapping ---
   function cpToPercent(cp) {
     const clamped = Math.max(-1000, Math.min(1000, cp));
     return ((clamped + 1000) / 2000) * 100;
   }
 
-  // --- DOM refs ---
   const boardEl = document.getElementById('board');
   const evalFill = document.getElementById('evalFill');
   const evalText = document.getElementById('evalText');
@@ -85,6 +77,7 @@
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const multipvInput = document.getElementById('multipv');
+  const movetimeInput = document.getElementById('movetime');
 
   const countBrilliant = document.getElementById('countBrilliant');
   const countExcellent = document.getElementById('countExcellent');
@@ -94,7 +87,6 @@
   const countMistake = document.getElementById('countMistake');
   const countBlunder = document.getElementById('countBlunder');
 
-  // --- Board ---
   const cg = Chessground(boardEl, {
     orientation: 'white',
     highlight: { lastMove: true, check: true },
@@ -102,7 +94,6 @@
     draggable: { enabled: false }
   });
 
-  // --- State ---
   let game = new Chess();
   let replay = new Chess();
   let analysis = [];
@@ -193,4 +184,11 @@
       setBoardFromFEN(replay.fen());
       currentIndex = 0;
       updateIndicator();
-    } catch (
+    } catch (e) { alert('Invalid PGN'); }
+  });
+
+  analyzeBtn.addEventListener('click', async () => {
+    const history = game.history({ verbose: true });
+    if (!history.length) return alert('Load a PGN first');
+
+    const movetime = parseInt(movetimeInput.value, 10
