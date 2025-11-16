@@ -12,7 +12,8 @@ Bookmark this to keep an eye on my project updates!
 ## 🛠 Tools and 🎮 Games and 🧠 Code Editors and 💻 Scripts
 
 [Tools](/tools/){: .btn}
-[Games](/games/){: .btn}
+[Games](/gamesrepoforwebsite/){: .btn}
 [Code Editors](/codeeditors/){: .btn}
 [Scripts](/Scripts?){: .btn}
-[Games](/gamesrepoforwebsite/){: .btn}
+[Games(if above one is not accessable)](/games/){: .btn}
+
