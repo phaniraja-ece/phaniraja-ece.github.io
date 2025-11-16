@@ -7,37 +7,49 @@
     engine.postMessage('uci');
   }
 
-  function analyseFen(fen, movetime = 300, multipv = 1) {
-    return new Promise((resolve) => {
-      let bestScore = 0, bestMove = null, pv = [];
+function analyseFen(fen, movetime = 300, multipv = 1) {
+  return new Promise((resolve) => {
+    let bestScore = 0;
+    let bestMove = null;
+    let pv = [];
+    let resolved = false;
 
-      const onMessage = (e) => {
-        const text = e.data;
-        if (text.startsWith('info')) {
-          const scoreMatch = text.match(/score (cp|mate) (-?\d+)/);
-          if (scoreMatch) {
-            const kind = scoreMatch[1];
-            const val = parseInt(scoreMatch[2], 10);
-            bestScore = kind === 'mate' ? (val > 0 ? 10000 : -10000) : val;
-          }
-          const pvMatch = text.match(/ pv (.+)$/);
-          if (pvMatch) pv = pvMatch[1].trim().split(/\s+/);
-        } else if (text.startsWith('bestmove')) {
-          const m = text.match(/^bestmove\s([a-h][1-8][a-h][1-8][qrbn]?)/);
-          if (m) bestMove = m[1];
-          engine.removeEventListener('message', onMessage);
-          resolve({ scoreCp: bestScore, bestMove, pv, fen });
+    const onMessage = (e) => {
+      const text = typeof e.data === 'string' ? e.data : '';
+      if (text.startsWith('info')) {
+        const scoreMatch = text.match(/score (cp|mate) (-?\d+)/);
+        if (scoreMatch) {
+          const kind = scoreMatch[1];
+          const val = parseInt(scoreMatch[2], 10);
+          bestScore = kind === 'mate' ? (val > 0 ? 10000 : -10000) : val;
         }
-      };
+        const pvMatch = text.match(/ pv (.+)$/);
+        if (pvMatch) pv = pvMatch[1].trim().split(/\s+/);
+      } else if (text.startsWith('bestmove')) {
+        const m = text.match(/^bestmove\s([a-h][1-8][a-h][1-8][qrbn]?)/);
+        if (m) bestMove = m[1];
+        engine.removeEventListener('message', onMessage);
+        resolved = true;
+        resolve({ scoreCp: bestScore, bestMove, pv, fen });
+      }
+    };
 
-      engine.addEventListener('message', onMessage);
-      engine.postMessage('ucinewgame');
-      engine.postMessage(`position fen ${fen}`);
-      engine.postMessage(`setoption name MultiPV value ${multipv}`);
-      engine.postMessage(`go movetime ${movetime}`);
-      setTimeout(() => engine.postMessage('stop'), movetime + 100);
-    });
-  }
+    engine.addEventListener('message', onMessage);
+    engine.postMessage('ucinewgame');
+    engine.postMessage(`position fen ${fen}`);
+    engine.postMessage(`setoption name MultiPV value ${multipv}`);
+    engine.postMessage(`go movetime ${movetime}`);
+
+    // Fallback: force resolve if bestmove never arrives
+    setTimeout(() => {
+      if (!resolved) {
+        engine.removeEventListener('message', onMessage);
+        resolve({ scoreCp: bestScore, bestMove, pv, fen });
+      }
+    }, movetime + 1000); // generous timeout
+  });
+}
+
 
   function classify(cpl, mateFlag) {
     if (mateFlag) return { label: 'Blunder', sym: '??', cls: 'blunder' };
