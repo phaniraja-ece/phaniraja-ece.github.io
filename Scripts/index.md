@@ -7,7 +7,7 @@ title: Scripts Dashboard
 
 #  Scripts Dashboard 
 
-Welcome to your scripts hub. Choose a Script below:
+Welcome to your scripts hub. Choose a OS for Script below:
 
 <div class="script-buttons">
   <a href="/Scripts/Scripts-for-linux-and-macos" class="tools-button">Scripts For MacOS and Linux</a>
