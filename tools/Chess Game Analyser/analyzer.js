@@ -1,11 +1,11 @@
 /* global Chess, Chessground */
 (function () {
-  // Stockfish
+  // --- Engine setup ---
   let engine;
   function initEngine() {
+    if (engine) engine.terminate();
     engine = new Worker(window.STOCKFISH_PATH);
     engine.postMessage('uci');
-    engine.postMessage('setoption name MultiPV value 1');
   }
 
   function analyseFen(fen, depth = 18, multipv = 1) {
@@ -41,7 +41,7 @@
     });
   }
 
-  // Classification
+  // --- Classification ---
   function classify(cpl, mateFlag) {
     if (mateFlag) return { label: 'Blunder', sym: '??', cls: 'blunder' };
     if (cpl <= 8) return { label: 'Great', sym: '=', cls: 'great' };
@@ -50,23 +50,23 @@
     if (cpl <= 200) return { label: 'Mistake', sym: '?', cls: 'mistake' };
     return { label: 'Blunder', sym: '??', cls: 'blunder' };
   }
-  // Optional heuristic for !! and ! (tighten as desired)
+
   function refineForBrilliant(isTop, preEval, postEval, pv) {
     if (!isTop) return null;
     const gain = postEval - preEval;
-    const showsSac = pv.some(m => m.endsWith('q') || m.endsWith('r') || m.endsWith('b') || m.endsWith('n')); // promotion/sac rough proxy
+    const showsSac = pv.some(m => m.endsWith('q') || m.endsWith('r') || m.endsWith('b') || m.endsWith('n'));
     if (gain >= 150 && showsSac) return { label: 'Brilliant', sym: '!!', cls: 'brilliant' };
     if (gain >= 100) return { label: 'Excellent', sym: '!', cls: 'excellent' };
     return null;
   }
 
-  // Eval bar mapping
+  // --- Eval bar mapping ---
   function cpToPercent(cp) {
     const clamped = Math.max(-1000, Math.min(1000, cp));
     return ((clamped + 1000) / 2000) * 100;
   }
 
-  // DOM refs
+  // --- DOM refs ---
   const boardEl = document.getElementById('board');
   const evalFill = document.getElementById('evalFill');
   const evalText = document.getElementById('evalText');
@@ -92,7 +92,7 @@
   const countMistake = document.getElementById('countMistake');
   const countBlunder = document.getElementById('countBlunder');
 
-  // Board
+  // --- Board ---
   const cg = Chessground(boardEl, {
     orientation: 'white',
     highlight: { lastMove: true, check: true },
@@ -100,17 +100,14 @@
     draggable: { enabled: false }
   });
 
-  // State
+  // --- State ---
   let game = new Chess();
   let replay = new Chess();
   let analysis = [];
   let currentIndex = 0;
 
   function setBoardFromFEN(fen) {
-    cg.set({
-      fen,
-      turnColor: fen.includes(' w ') ? 'white' : 'black'
-    });
+    cg.set({ fen, turnColor: fen.includes(' w ') ? 'white' : 'black' });
   }
 
   function updateEvalBar(cp, turn) {
@@ -142,17 +139,15 @@
   }
 
   function updateSummary() {
-    const tally = {
-      Brilliant: 0, Excellent: 0, Great: 0, Good: 0, Inaccuracy: 0, Mistake: 0, Blunder: 0
-    };
+    const tally = { Brilliant:0, Excellent:0, Great:0, Good:0, Inaccuracy:0, Mistake:0, Blunder:0 };
     analysis.forEach(a => { tally[a.label] = (tally[a.label] || 0) + 1; });
-    countBrilliant.textContent = tally.Brilliant || 0;
-    countExcellent.textContent = tally.Excellent || 0;
-    countGreat.textContent = tally.Great || 0;
-    countGood.textContent = tally.Good || 0;
-    countInaccuracy.textContent = tally.Inaccuracy || 0;
-    countMistake.textContent = tally.Mistake || 0;
-    countBlunder.textContent = tally.Blunder || 0;
+    countBrilliant.textContent = tally.Brilliant;
+    countExcellent.textContent = tally.Excellent;
+    countGreat.textContent = tally.Great;
+    countGood.textContent = tally.Good;
+    countInaccuracy.textContent = tally.Inaccuracy;
+    countMistake.textContent = tally.Mistake;
+    countBlunder.textContent = tally.Blunder;
   }
 
   function jumpTo(i) {
@@ -160,25 +155,10 @@
     replay = new Chess();
     const hist = game.history({ verbose: true });
     for (let k = 0; k <= i; k++) replay.move(hist[k]);
-
     currentIndex = i;
     setBoardFromFEN(replay.fen());
     updateEvalBar(analysis[i].evalCp, replay.turn() === 'w' ? 'White' : 'Black');
     updateIndicator();
-
-    // Arrows: show best move suggestion
-    if (analysis[i].bestUci) {
-      const from = analysis[i].bestUci.slice(0,2);
-      const to = analysis[i].bestUci.slice(2,4);
-      cg.set({
-        drawable: {
-          enabled: true,
-          shapes: [{ orig: from, dest: to, brush: 'green' }]
-        }
-      });
-    } else {
-      cg.set({ drawable: { enabled: false, shapes: [] } });
-    }
   }
 
   prevBtn.addEventListener('click', () => jumpTo(currentIndex - 1));
@@ -211,83 +191,7 @@
       setBoardFromFEN(replay.fen());
       currentIndex = 0;
       updateIndicator();
-    } catch (e) {
-      alert('Invalid PGN');
-    }
+    } catch (e) { alert('Invalid PGN'); }
   });
 
-  analyzeBtn.addEventListener('click', async () => {
-    const history = game.history({ verbose: true });
-    if (!history.length) {
-      alert('Load a PGN first');
-      return;
-    }
-    const depth = parseInt(depthInput.value, 10) || 18;
-    const multipv = parseInt(multipvInput.value, 10) || 1;
-    analysis = [];
-    replay = new Chess();
-
-    initEngine();
-
-    for (let i = 0; i < history.length; i++) {
-      const ply = history[i];
-      const preFen = replay.fen();
-      const turnSide = replay.turn() === 'w' ? 'White' : 'Black';
-
-      const pre = await analyseFen(preFen, depth, multipv);
-      const bestUci = pre.bestMove;
-      const preEval = pre.scoreCp;
-
-      // Apply player's move
-      replay.move(ply);
-      const post = await analyseFen(replay.fen(), depth, multipv);
-      const postEval = post.scoreCp;
-
-      // Best move alternative eval
-      let bestPostEval = preEval;
-      let bestSan = null;
-      if (bestUci) {
-        const alt = new Chess(preFen);
-        const moveObj = {
-          from: bestUci.slice(0,2),
-          to: bestUci.slice(2,4),
-          promotion: bestUci.length === 5 ? bestUci.slice(4) : undefined
-        };
-        const played = alt.move(moveObj);
-        const altRes = await analyseFen(alt.fen(), depth, multipv);
-        bestPostEval = altRes.scoreCp;
-        if (played) bestSan = played.san;
-      }
-
-      const perspective = turnSide === 'White' ? 1 : -1;
-      const cpl = Math.round((bestPostEval - postEval) * perspective);
-      const mateFlag = Math.abs(postEval) >= 9000;
-
-      let clsf = classify(cpl, mateFlag);
-      const isTop = Math.abs(cpl) <= 6;
-      const refined = refineForBrilliant(isTop, preEval, postEval, post.pv);
-      if (refined) clsf = refined;
-
-      analysis.push({
-        moveNumber: Math.ceil((i + 1) / 2),
-        san: ply.san,
-        label: clsf.label,
-        sym: clsf.sym,
-        cls: clsf.cls,
-        cpl,
-        bestSan,
-        bestUci,
-        pv: post.pv,
-        evalCp: postEval
-      });
-    }
-
-    renderTable();
-    updateSummary();
-    currentIndex = 0;
-    jumpTo(0);
-  });
-
-  // Initialize empty board
-  setBoardFromFEN(game.fen());
-})();
+  analyzeBtn
