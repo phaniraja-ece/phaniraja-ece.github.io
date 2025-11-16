@@ -8,7 +8,8 @@
     engine.postMessage('uci');
   }
 
-  function analyseFen(fen, depth = 18, multipv = 1) {
+  // Use movetime instead of depth to avoid freezing
+  function analyseFen(fen, movetime = 300, multipv = 1) {
     return new Promise((resolve) => {
       let bestScore = 0;
       let bestMove = null;
@@ -37,7 +38,7 @@
       engine.postMessage('ucinewgame');
       engine.postMessage(`position fen ${fen}`);
       engine.postMessage(`setoption name MultiPV value ${multipv}`);
-      engine.postMessage(`go depth ${depth}`);
+      engine.postMessage(`go movetime ${movetime}`);
     });
   }
 
@@ -194,4 +195,4 @@
     } catch (e) { alert('Invalid PGN'); }
   });
 
-  analyzeBtn
+  analyzeBtn.addEventListener('click',
