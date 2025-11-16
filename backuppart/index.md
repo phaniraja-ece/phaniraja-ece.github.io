@@ -1,16 +1,15 @@
 ---
 layout: default
-title: Scripts Dashboard
+title: Backup Dashboard
 ---
 
 <link rel="stylesheet" href="/Scripts/Scripts.css">
 
-#  Scripts Dashboard 
+#  Backup Dashboard 
 
-Welcome to your scripts hub. Choose a OS for Script below:
+If the above ones did not work, try these:
 
 <div class="script-buttons">
-  <a href="/Scripts/Scripts-for-linux-and-macos" class="tools-button">Scripts For MacOS and Linux</a>
-  <a href="/Scripts/Scripts-for-Windows" class="tools-button">Scripts For Windows</a>
+  <a href="/Games/" class="tools-button">Games</a>
 </div>
 
