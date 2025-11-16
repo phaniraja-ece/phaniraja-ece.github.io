@@ -1,49 +1,35 @@
-/* global Chess */
+/* global Chess, Chessground */
 (function () {
-  // Stockfish setup
+  // Stockfish
   let engine;
   function initEngine() {
     engine = new Worker(window.STOCKFISH_PATH);
-    // UCI boot
     engine.postMessage('uci');
     engine.postMessage('setoption name MultiPV value 1');
   }
 
-  // Engine request/response queue
   function analyseFen(fen, depth = 18, multipv = 1) {
     return new Promise((resolve) => {
-      const lines = [];
-      let bestScore = null;
+      let bestScore = 0;
       let bestMove = null;
       let pv = [];
 
       const onMessage = (e) => {
-        const text = (typeof e.data === 'string') ? e.data : '';
+        const text = typeof e.data === 'string' ? e.data : '';
         if (text.startsWith('info')) {
-          // Parse score and pv from info lines
-          // Examples: "info depth 20 seldepth 30 score cp 34 pv e2e4 e7e5 ..."
-          // or: "info depth 20 score mate 3 pv ..."
-
           const scoreMatch = text.match(/score (cp|mate) (-?\d+)/);
-          const pvMatch = text.match(/ pv ([a-h][1-8][a-h][1-8][qrbn]? .*)$/) || text.match(/ pv ([a-h][1-8][a-h][1-8][qrbn]?.*)$/);
-
           if (scoreMatch) {
             const kind = scoreMatch[1];
-            const value = parseInt(scoreMatch[2], 10);
-            let scoreCp = value;
-            if (kind === 'mate') {
-              scoreCp = value > 0 ? 10000 : -10000;
-            }
-            bestScore = scoreCp; // keep last (usually highest depth)
+            const val = parseInt(scoreMatch[2], 10);
+            bestScore = kind === 'mate' ? (val > 0 ? 10000 : -10000) : val;
           }
-          if (pvMatch) {
-            pv = pvMatch[1].trim().split(/\s+/);
-          }
+          const pvMatch = text.match(/ pv (.+)$/);
+          if (pvMatch) pv = pvMatch[1].trim().split(/\s+/);
         } else if (text.startsWith('bestmove')) {
-          const moveMatch = text.match(/^bestmove\s([a-h][1-8][a-h][1-8][qrbn]?)/);
-          if (moveMatch) bestMove = moveMatch[1];
+          const m = text.match(/^bestmove\s([a-h][1-8][a-h][1-8][qrbn]?)/);
+          if (m) bestMove = m[1];
           engine.removeEventListener('message', onMessage);
-          resolve({ scoreCp: bestScore ?? 0, bestMove, pv, fen });
+          resolve({ scoreCp: bestScore, bestMove, pv, fen });
         }
       };
 
@@ -55,52 +41,48 @@
     });
   }
 
-  // CPL thresholds to symbols (tunable)
-  function classifyCPL(cpl, mateFlag = false) {
-    if (mateFlag) return { label: 'Blunder', symbol: '??', cls: 'blunder' };
-    if (cpl <= 10) return { label: 'Great', symbol: '=', cls: 'great' }; // "=" indicates top move/equality kept
-    if (cpl <= 30) return { label: 'Good', symbol: '!', cls: 'good' };
-    if (cpl <= 80) return { label: 'Inaccuracy', symbol: '?!', cls: 'inaccuracy' };
-    if (cpl <= 200) return { label: 'Mistake', symbol: '?', cls: 'mistake' };
-    return { label: 'Blunder', symbol: '??', cls: 'blunder' };
+  // Classification
+  function classify(cpl, mateFlag) {
+    if (mateFlag) return { label: 'Blunder', sym: '??', cls: 'blunder' };
+    if (cpl <= 8) return { label: 'Great', sym: '=', cls: 'great' };
+    if (cpl <= 30) return { label: 'Good', sym: '!', cls: 'good' };
+    if (cpl <= 80) return { label: 'Inaccuracy', sym: '?!', cls: 'inaccuracy' };
+    if (cpl <= 200) return { label: 'Mistake', sym: '?', cls: 'mistake' };
+    return { label: 'Blunder', sym: '??', cls: 'blunder' };
   }
-
-  // Optional: detect "Brilliant" and "Excellent"
-  function refineBrilliants(currentMoveSAN, playerPostEval, bestPostEval, secondBestDelta = 150) {
-    // If player's move equals engine best and creates a significant positive swing or finds forcing PV
-    const swing = bestPostEval - playerPostEval;
-    if (Math.abs(swing) < 10 && bestPostEval >= 150) {
-      // Excellent: maintained/extended significant advantage
-      return { label: 'Excellent', symbol: '!', cls: 'excellent' };
-    }
-    // Heuristic: if player’s move is engine-best and PV contains a sacrifice (promotion/capture-heavy), mark Brilliant
-    if (Math.abs(swing) < 10 && /[qrbn]$/.test(currentMoveSAN)) {
-      return { label: 'Brilliant', symbol: '!!', cls: 'brilliant' };
-    }
+  // Optional heuristic for !! and ! (tighten as desired)
+  function refineForBrilliant(isTop, preEval, postEval, pv) {
+    if (!isTop) return null;
+    const gain = postEval - preEval;
+    const showsSac = pv.some(m => m.endsWith('q') || m.endsWith('r') || m.endsWith('b') || m.endsWith('n')); // promotion/sac rough proxy
+    if (gain >= 150 && showsSac) return { label: 'Brilliant', sym: '!!', cls: 'brilliant' };
+    if (gain >= 100) return { label: 'Excellent', sym: '!', cls: 'excellent' };
     return null;
   }
 
-  // Eval bar: map cp (-1000..+1000) to height (0..100%)
+  // Eval bar mapping
   function cpToPercent(cp) {
-    // Clamp around [-1000, +1000] for visual stability; you can widen/narrow as desired
     const clamped = Math.max(-1000, Math.min(1000, cp));
-    // Convert to [0,100], 0% = black winning, 100% = white winning
     return ((clamped + 1000) / 2000) * 100;
   }
 
   // DOM refs
-  const pgnInput = document.getElementById('pgnInput');
-  const depthInput = document.getElementById('depth');
-  const multipvInput = document.getElementById('multipv');
-  const analyzeBtn = document.getElementById('analyzeBtn');
-  const clearBtn = document.getElementById('clearBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const moveIndicator = document.getElementById('moveIndicator');
-  const movesBody = document.getElementById('movesBody');
+  const boardEl = document.getElementById('board');
   const evalFill = document.getElementById('evalFill');
   const evalText = document.getElementById('evalText');
-  const sideText = document.getElementById('sideText');
+  const turnText = document.getElementById('turnText');
+  const movesBody = document.getElementById('movesBody');
+  const moveIndicator = document.getElementById('moveIndicator');
+
+  const pgnInput = document.getElementById('pgnInput');
+  const loadBtn = document.getElementById('loadBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const flipBtn = document.getElementById('flipBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const depthInput = document.getElementById('depth');
+  const multipvInput = document.getElementById('multipv');
 
   const countBrilliant = document.getElementById('countBrilliant');
   const countExcellent = document.getElementById('countExcellent');
@@ -110,22 +92,60 @@
   const countMistake = document.getElementById('countMistake');
   const countBlunder = document.getElementById('countBlunder');
 
+  // Board
+  const cg = Chessground(boardEl, {
+    orientation: 'white',
+    highlight: { lastMove: true, check: true },
+    animation: { duration: 200 },
+    draggable: { enabled: false }
+  });
+
+  // State
+  let game = new Chess();
+  let replay = new Chess();
   let analysis = [];
   let currentIndex = 0;
 
+  function setBoardFromFEN(fen) {
+    cg.set({
+      fen,
+      turnColor: fen.includes(' w ') ? 'white' : 'black'
+    });
+  }
+
+  function updateEvalBar(cp, turn) {
+    evalFill.style.height = `${cpToPercent(cp)}%`;
+    evalText.textContent = (cp / 100).toFixed(2);
+    turnText.textContent = turn;
+  }
+
+  function updateIndicator() {
+    moveIndicator.textContent = `${analysis.length ? currentIndex + 1 : 0}/${analysis.length}`;
+  }
+
+  function renderTable() {
+    movesBody.innerHTML = '';
+    analysis.forEach((row, i) => {
+      const tr = document.createElement('tr');
+      const pvText = row.pv.length ? row.pv.join(' ') : '-';
+      tr.innerHTML = `
+        <td>${row.moveNumber}</td>
+        <td>${row.san}</td>
+        <td><span class="symbol ${row.cls}">${row.sym}</span></td>
+        <td>${row.cpl}</td>
+        <td>${row.bestSan || '-'}</td>
+        <td>${pvText}</td>
+      `;
+      tr.addEventListener('click', () => jumpTo(i));
+      movesBody.appendChild(tr);
+    });
+  }
+
   function updateSummary() {
     const tally = {
-      Brilliant: 0,
-      Excellent: 0,
-      Great: 0,
-      Good: 0,
-      Inaccuracy: 0,
-      Mistake: 0,
-      Blunder: 0
+      Brilliant: 0, Excellent: 0, Great: 0, Good: 0, Inaccuracy: 0, Mistake: 0, Blunder: 0
     };
-    analysis.forEach(a => {
-      tally[a.label] = (tally[a.label] || 0) + 1;
-    });
+    analysis.forEach(a => { tally[a.label] = (tally[a.label] || 0) + 1; });
     countBrilliant.textContent = tally.Brilliant || 0;
     countExcellent.textContent = tally.Excellent || 0;
     countGreat.textContent = tally.Great || 0;
@@ -135,174 +155,139 @@
     countBlunder.textContent = tally.Blunder || 0;
   }
 
-  function renderTable() {
-    movesBody.innerHTML = '';
-    analysis.forEach((row, i) => {
-      const tr = document.createElement('tr');
-      const symbolCls = `symbol ${row.cls}`;
-      tr.innerHTML = `
-        <td>${row.moveNumber}</td>
-        <td>${row.san}</td>
-        <td><span class="${symbolCls}">${row.symbol}</span></td>
-        <td>${row.cpl}</td>
-        <td>${row.bestSan || '-'}</td>
-        <td>${(row.pv || []).join(' ') || '-'}</td>
-        <td>${(row.evalCp / 100).toFixed(2)}</td>
-      `;
-      tr.addEventListener('click', () => {
-        currentIndex = i;
-        updateEvalBar();
-        updateIndicator();
+  function jumpTo(i) {
+    if (i < 0 || i >= analysis.length) return;
+    replay = new Chess();
+    const hist = game.history({ verbose: true });
+    for (let k = 0; k <= i; k++) replay.move(hist[k]);
+
+    currentIndex = i;
+    setBoardFromFEN(replay.fen());
+    updateEvalBar(analysis[i].evalCp, replay.turn() === 'w' ? 'White' : 'Black');
+    updateIndicator();
+
+    // Arrows: show best move suggestion
+    if (analysis[i].bestUci) {
+      const from = analysis[i].bestUci.slice(0,2);
+      const to = analysis[i].bestUci.slice(2,4);
+      cg.set({
+        drawable: {
+          enabled: true,
+          shapes: [{ orig: from, dest: to, brush: 'green' }]
+        }
       });
-      movesBody.appendChild(tr);
-    });
-  }
-
-  function updateEvalBar() {
-    if (!analysis.length) return;
-    const row = analysis[currentIndex];
-    const percent = cpToPercent(row.evalCp);
-    evalFill.style.height = `${percent}%`;
-    evalText.textContent = (row.evalCp / 100).toFixed(2);
-    sideText.textContent = row.sideToMove;
-  }
-
-  function updateIndicator() {
-    moveIndicator.textContent = `Move ${currentIndex + 1}/${analysis.length}`;
-  }
-
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      updateEvalBar();
-      updateIndicator();
+    } else {
+      cg.set({ drawable: { enabled: false, shapes: [] } });
     }
-  });
-  nextBtn.addEventListener('click', () => {
-    if (currentIndex < analysis.length - 1) {
-      currentIndex++;
-      updateEvalBar();
-      updateIndicator();
-    }
+  }
+
+  prevBtn.addEventListener('click', () => jumpTo(currentIndex - 1));
+  nextBtn.addEventListener('click', () => jumpTo(currentIndex + 1));
+  flipBtn.addEventListener('click', () => {
+    const o = cg.state.orientation === 'white' ? 'black' : 'white';
+    cg.set({ orientation: o });
   });
 
   clearBtn.addEventListener('click', () => {
     pgnInput.value = '';
+    game = new Chess();
+    replay = new Chess();
     analysis = [];
     movesBody.innerHTML = '';
     updateSummary();
     currentIndex = 0;
     updateIndicator();
-    evalFill.style.height = '50%';
-    evalText.textContent = '0.00';
-    sideText.textContent = 'White';
+    setBoardFromFEN(replay.fen());
+    updateEvalBar(0, 'White');
+  });
+
+  loadBtn.addEventListener('click', () => {
+    const pgn = pgnInput.value.trim();
+    if (!pgn) return;
+    try {
+      game = new Chess();
+      game.load_pgn(pgn, { sloppy: true });
+      replay = new Chess();
+      setBoardFromFEN(replay.fen());
+      currentIndex = 0;
+      updateIndicator();
+    } catch (e) {
+      alert('Invalid PGN');
+    }
   });
 
   analyzeBtn.addEventListener('click', async () => {
-    const pgn = pgnInput.value.trim();
-    if (!pgn) return;
-
-    analyzeBtn.disabled = true;
-    analysis = [];
-
-    const depth = parseInt(depthInput.value, 10) || 18;
-    const multipv = parseInt(multipvInput.value, 10) || 1;
-
-    // Parse PGN with chess.js
-    const game = new Chess();
-    try {
-      game.load_pgn(pgn, { sloppy: true });
-    } catch (e) {
-      alert('Invalid PGN.');
-      analyzeBtn.disabled = false;
+    const history = game.history({ verbose: true });
+    if (!history.length) {
+      alert('Load a PGN first');
       return;
     }
+    const depth = parseInt(depthInput.value, 10) || 18;
+    const multipv = parseInt(multipvInput.value, 10) || 1;
+    analysis = [];
+    replay = new Chess();
 
     initEngine();
-
-    // Walk through mainline moves
-    const history = game.history({ verbose: true });
-    const replay = new Chess();
 
     for (let i = 0; i < history.length; i++) {
       const ply = history[i];
       const preFen = replay.fen();
-      const sideToMove = replay.turn() === 'w' ? 'White' : 'Black';
+      const turnSide = replay.turn() === 'w' ? 'White' : 'Black';
 
-      const preResult = await analyseFen(preFen, depth, multipv);
-      const bestMoveUci = preResult.bestMove;
-      const preEvalCp = preResult.scoreCp;
+      const pre = await analyseFen(preFen, depth, multipv);
+      const bestUci = pre.bestMove;
+      const preEval = pre.scoreCp;
 
       // Apply player's move
       replay.move(ply);
-      const postFen = replay.fen();
-      const postResult = await analyseFen(postFen, depth, multipv);
-      const postEvalCp = postResult.scoreCp;
+      const post = await analyseFen(replay.fen(), depth, multipv);
+      const postEval = post.scoreCp;
 
-      // Evaluate if engine-best was played instead
-      let bestPostEval = preEvalCp;
+      // Best move alternative eval
+      let bestPostEval = preEval;
       let bestSan = null;
-      if (bestMoveUci) {
+      if (bestUci) {
         const alt = new Chess(preFen);
         const moveObj = {
-          from: bestMoveUci.slice(0, 2),
-          to: bestMoveUci.slice(2, 4),
-          promotion: bestMoveUci.length === 5 ? bestMoveUci.slice(4) : undefined
+          from: bestUci.slice(0,2),
+          to: bestUci.slice(2,4),
+          promotion: bestUci.length === 5 ? bestUci.slice(4) : undefined
         };
-        alt.move(moveObj);
-        const altResult = await analyseFen(alt.fen(), depth, multipv);
-        bestPostEval = altResult.scoreCp;
-        // Get SAN for best move
-        const sanFinder = new Chess(preFen);
-        const sanMove = sanFinder.move(moveObj);
-        bestSan = sanMove ? sanMove.san : null;
+        const played = alt.move(moveObj);
+        const altRes = await analyseFen(alt.fen(), depth, multipv);
+        bestPostEval = altRes.scoreCp;
+        if (played) bestSan = played.san;
       }
 
-      // CPL from mover's perspective (mover is sideToMove at preFen)
-      const perspective = sideToMove === 'White' ? 1 : -1;
-      const cplRaw = (bestPostEval - postEvalCp) * perspective;
-      const cpl = Math.round(cplRaw);
+      const perspective = turnSide === 'White' ? 1 : -1;
+      const cpl = Math.round((bestPostEval - postEval) * perspective);
+      const mateFlag = Math.abs(postEval) >= 9000;
 
-      // Mate flag: if post eval is mate for opponent
-      const mateFlag = Math.abs(postEvalCp) >= 9000;
-
-      // Classification
-      let { label, symbol, cls } = classifyCPL(cpl, mateFlag);
-
-      // Refinement for Excellent/Brilliant when player matched best line strongly
-      const refine = refineBrilliants(ply.san, postEvalCp, bestPostEval);
-      if (refine && Math.abs(cpl) <= 10) {
-        label = refine.label;
-        symbol = refine.symbol;
-        cls = refine.cls;
-      }
-      // If truly top move (near-zero CPL), mark as Great with '='
-      if (Math.abs(cpl) <= 5 && !refine) {
-        label = 'Great';
-        symbol = '=';
-        cls = 'great';
-      }
+      let clsf = classify(cpl, mateFlag);
+      const isTop = Math.abs(cpl) <= 6;
+      const refined = refineForBrilliant(isTop, preEval, postEval, post.pv);
+      if (refined) clsf = refined;
 
       analysis.push({
-        moveNumber: ply.turn === 'w' ? Math.ceil((i + 1) / 2) : Math.ceil((i + 1) / 2),
+        moveNumber: Math.ceil((i + 1) / 2),
         san: ply.san,
-        label,
-        symbol,
-        cls,
+        label: clsf.label,
+        sym: clsf.sym,
+        cls: clsf.cls,
         cpl,
         bestSan,
-        pv: postResult.pv,
-        evalCp: postEvalCp,
-        sideToMove: replay.turn() === 'w' ? 'White' : 'Black'
+        bestUci,
+        pv: post.pv,
+        evalCp: postEval
       });
     }
 
     renderTable();
     updateSummary();
     currentIndex = 0;
-    updateEvalBar();
-    updateIndicator();
-
-    analyzeBtn.disabled = false;
+    jumpTo(0);
   });
+
+  // Initialize empty board
+  setBoardFromFEN(game.fen());
 })();
