@@ -5,7 +5,7 @@ title: Scripts Dashboard
 
 <link rel="stylesheet" href="/Scripts/Scripts-for-Windows/Scripts-for-Windows.css">
 
-#  Scripts Dashboard For Linux and MacOS
+#  Scripts Dashboard For Windows
 
 Also note that this currently only works on Windows. 
 
