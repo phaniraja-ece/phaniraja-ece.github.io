@@ -15,3 +15,4 @@ Bookmark this to keep an eye on my project updates!
 [Games](/games/){: .btn}
 [Code Editors](/codeeditors/){: .btn}
 [Scripts](/Scripts?){: .btn}
+[Games](/gamesrepoforwebsite/){: .btn}
