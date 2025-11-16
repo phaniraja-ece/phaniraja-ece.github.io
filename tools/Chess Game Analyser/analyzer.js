@@ -8,7 +8,7 @@
     engine.postMessage('uci');
   }
 
-  // Use movetime instead of depth to avoid freezing
+  // Movetime-based analysis (safe, non-blocking)
   function analyseFen(fen, movetime = 300, multipv = 1) {
     return new Promise((resolve) => {
       let bestScore = 0;
@@ -39,6 +39,8 @@
       engine.postMessage(`position fen ${fen}`);
       engine.postMessage(`setoption name MultiPV value ${multipv}`);
       engine.postMessage(`go movetime ${movetime}`);
+      // safety cutoff
+      setTimeout(() => engine.postMessage('stop'), movetime + 100);
     });
   }
 
@@ -82,7 +84,6 @@
   const flipBtn = document.getElementById('flipBtn');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
-  const depthInput = document.getElementById('depth');
   const multipvInput = document.getElementById('multipv');
 
   const countBrilliant = document.getElementById('countBrilliant');
@@ -192,7 +193,4 @@
       setBoardFromFEN(replay.fen());
       currentIndex = 0;
       updateIndicator();
-    } catch (e) { alert('Invalid PGN'); }
-  });
-
-  analyzeBtn.addEventListener('click',
+    } catch (
