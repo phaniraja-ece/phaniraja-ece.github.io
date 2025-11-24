@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockfish 10 Web Analyzer</title>
+
+    <link rel="stylesheet" href="./chessboard-1.0.0.css" />
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="topbar">
+        <span class="brand">Stockfish 10 Analyzer</span>
+        <div class="actions">
+            <label for="depth-input">Depth:</label>
+            <input type="number" id="depth-input" value="18" min="5" max="30">
+            <button id="set-fen-btn">Load FEN</button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="board-panel">
+            <div id="board" style="width: 600px;"></div> 
+            
+            <div class="controls">
+                <button id="prev-btn">◀️ Back</button>
+                <button id="next-btn">▶️ Forward</button>
+                <button id="reset-btn">🔄 Reset</button>
+                <button id="analyze-btn">🔎 Analyze Current</button>
+            </div>
+            
+            <div class="evalbar">
+                <div id="eval-fill" class="evalfill" style="width: 50%;"></div>
+                <div class="evalticks">
+                    <span>-M99</span>
+                    <span>-4</span>
+                    <span>-2</span>
+                    <span class="center-line">0</span>
+                    <span>+2</span>
+                    <span>+4</span>
+                    <span>+M99</span>
+                </div>
+            </div>
+
+            <div class="evalinfo">
+                <p>Best Move: <span id="best-move" class="symbol">N/A</span></p>
+                <p>Evaluation: <span id="evaluation" class="symbol">0.00</span></p>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h3>PGN/FEN</h3>
+            <div class="pgnbox">
+                <textarea id="pgn-input" rows="10"></textarea>
+            </div>
+            <div class="pgn-actions">
+                <button id="load-pgn-btn">Load PGN</button>
+                <button id="copy-fen-btn">Copy FEN</button>
+            </div>
+            
+            <div class="summary">
+                <span>Turn: <span id="turn-info">White</span></span>
+                <span>In Check: <span id="check-info">No</span></span>
+                <span>Game State: <span id="game-state">Ongoing</span></span>
+            </div>
+
+            <h3>Move List</h3>
+            <div id="move-list" class="movelist">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+    
+    <script src="./chess.js"></script> 
+    
+    <script src="./chessboard-1.0.0.js"></script> 
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
