@@ -251,8 +251,8 @@ button:hover { background: var(--blue); }
 /* Brilliance (!!) */
 .brilliance {
     color: var(--bg); /* Dark text color from your palette */
-    background: var(--orange); /* Bright background for impact */
-    border: 1px solid var(--orange);
+    background: var(--cyan); /* Bright background for impact */
+    border: 1px solid var(--cyan);
 }
 
 /* Excellent/Good Move (!) */
