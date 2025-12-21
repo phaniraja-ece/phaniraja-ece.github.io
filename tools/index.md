@@ -20,5 +20,5 @@ Welcome to your utility hub. Choose a tool below:
   <a href="/lcdchar/" class="tools-button">LCD Character Designer For Non-I2C</a>
   <a href="/LcdChar_I2C/" class="tools-button">LCD Character Designer For I2C</a>
   <a href="/PYTHON-COMPILER/" class="tools-button">Python Compiler Launcher</a>
-  <a href="/tools/QR Generator" class="tools-button">Python Compiler Launcher</a>
+  <a href="/tools/QR Generator" class="tools-button">QR Code Generatorr</a>
 </div>
