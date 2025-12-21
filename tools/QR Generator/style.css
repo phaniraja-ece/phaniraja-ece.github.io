@@ -1,0 +1,111 @@
+/* Base styles */
+body {
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 2em;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 1em;
+  font-size: 2em;
+  color: #58a6ff;
+}
+
+/* Textarea for input */
+textarea {
+  width: 90%;
+  height: 200px;
+  margin-bottom: 1em;
+  border-radius: 6px;
+  padding: 1em;
+  font-family: monospace;
+  font-size: 1em;
+  background-color: #161b22;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+  resize: vertical;
+}
+
+/* Buttons */
+button {
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  background-color: #2ea44f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0.5em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #22863a;
+  transform: scale(1.05);
+}
+
+/* Output area for JS Runner */
+pre#output {
+  background-color: #161b22;
+  color: #00ff00;
+  padding: 1em;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  width: 90%;
+  margin: auto;
+  margin-top: 1em;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Preview iframe for HTML tool */
+iframe#previewFrame {
+  width: 90%;
+  height: 300px;
+  margin-top: 1em;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background-color: white;
+}
+/* Your existing CSS stays the same, add these: */
+
+#output {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1em;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.qr-item {
+    background-color: #161b22;
+    padding: 1em;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    text-align: center;
+}
+
+.qr-item canvas {
+    max-width: 100%;
+    border-radius: 4px;
+}
+
+.qr-text {
+    font-family: monospace;
+    font-size: 0.9em;
+    color: #8b949e;
+    margin-top: 0.5em;
+    word-break: break-all;
+}
+
+.controls {
+    margin: 1em 0;
+}
+
+@media (max-width: 768px) {
+    #output { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+

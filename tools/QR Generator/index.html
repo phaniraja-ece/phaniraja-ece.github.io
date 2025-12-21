@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+    <textarea id="textInput" placeholder="Enter URLs/text, one per line&#10;https://example.com&#10;Contact: Test&#10;WiFi:S:MyNetwork;T:WPA;P:password;;"></textarea>
+    <div class="controls">
+        <button onclick="generateBulk()">Generate All</button>
+        <button onclick="clearAll()">Clear</button>
+        <button onclick="downloadAll()">Download ZIP</button>
+    </div>
+    <pre id="output">Preview QR codes here...</pre>
+    <script src="script.js"></script>
+</body>
+</html>
