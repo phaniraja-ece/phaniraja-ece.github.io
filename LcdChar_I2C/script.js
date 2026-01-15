@@ -108,13 +108,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 window.clearCurrentSlot = function() {
-    if (confirm("Clear this character?")) {
-        // Reset the 8x5 grid data
+    console.log("Clear button clicked!"); // This helps us debug
+    
+    // 1. Reset the data for the current active slot
+    if (typeof slots !== 'undefined' && slots[currentSlot]) {
         slots[currentSlot] = Array.from({ length: 8 }, () => Array(5).fill(false));
-        // Force the screen to update
-        renderGrid();
-        // Clear the code output box
+        
+        // 2. Re-draw the grid so the pixels visually disappear
+        renderGrid(); 
+        
+        // 3. Clear the text in the code output box
         const output = document.getElementById("codeOutput");
         if (output) output.textContent = "";
+    } else {
+        console.error("Slots array not found!");
     }
 };
+
