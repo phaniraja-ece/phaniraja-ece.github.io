@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     slots[s] = Array.from({ length: 8 }, () => Array(5).fill(false));
     const option = document.createElement("option");
     option.value = s;
-    option.textContent = s; // Simplified label to match your screenshot
+    option.textContent = s; 
     slotSelect.appendChild(option);
   }
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGrid();
   });
 
-  // Re-render when color is changed to apply new color to "on" pixels
+  // Re-render when color is changed
   colorSelect.addEventListener("change", () => {
     renderGrid();
   });
@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const pixel = document.createElement("div");
         pixel.classList.add("pixel");
         
-        // If the bit is set, apply the 'on' class and the selected color
         if (slots[currentSlot][row][col]) {
           pixel.classList.add("on", colorSelect.value);
         }
@@ -56,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveSlot(slot) {
     const pixels = grid.querySelectorAll(".pixel");
     let i = 0;
+    if (!pixels.length) return;
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 5; col++) {
         const pixel = pixels[i++];
@@ -64,7 +64,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Generate Arduino code compatible with LiquidCrystal_I2C
+  // --- FIXED CLEAR FUNCTION ---
+  window.clearCurrentSlot = function() {
+    if (confirm("Clear this character slot?")) {
+      // Reset the current slot data to all false
+      slots[currentSlot] = Array.from({ length: 8 }, () => Array(5).fill(false));
+      // Immediately refresh the visual grid
+      renderGrid();
+      // Clear the code output text
+      if (codeOutput) codeOutput.textContent = "";
+    }
+  };
+
+  // Generate Arduino code
   window.generateCode = function () {
     saveSlot(currentSlot);
     let code = `#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n`;
@@ -77,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         return `B${value.toString(2).padStart(5, '0')}`;
       });
-      code += `\nbyte customChar${s}[8] = {\n  ${rows.join(',\n  ')}\n};\n`;
+      code += `\nbyte customChar${s}[8] = {\n  ${rows.join(',\n   ')}\n};\n`;
     }
 
     code += `\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n`;
@@ -95,33 +107,14 @@ document.addEventListener("DOMContentLoaded", () => {
     code += `}\n\nvoid loop() {}`;
 
     codeOutput.textContent = code;
-    codeOutput.scrollIntoView({ behavior: 'smooth' }); // Helps mobile users find the code
+    codeOutput.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Copy code to clipboard functionality
+  // Copy code to clipboard
   window.copyCode = function () {
     if (!codeOutput.textContent) return;
     navigator.clipboard.writeText(codeOutput.textContent).then(() => {
       alert("Code copied to clipboard!");
     });
   };
-
 });
-window.clearCurrentSlot = function() {
-    console.log("Clear button clicked!"); // This helps us debug
-    
-    // 1. Reset the data for the current active slot
-    if (typeof slots !== 'undefined' && slots[currentSlot]) {
-        slots[currentSlot] = Array.from({ length: 8 }, () => Array(5).fill(false));
-        
-        // 2. Re-draw the grid so the pixels visually disappear
-        renderGrid(); 
-        
-        // 3. Clear the text in the code output box
-        const output = document.getElementById("codeOutput");
-        if (output) output.textContent = "";
-    } else {
-        console.error("Slots array not found!");
-    }
-};
-
