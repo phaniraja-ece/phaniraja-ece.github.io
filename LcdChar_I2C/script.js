@@ -105,4 +105,16 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Code copied to clipboard!");
     });
   };
+
 });
+window.clearCurrentSlot = function() {
+    if (confirm("Clear this character?")) {
+        // Reset the 8x5 grid data
+        slots[currentSlot] = Array.from({ length: 8 }, () => Array(5).fill(false));
+        // Force the screen to update
+        renderGrid();
+        // Clear the code output box
+        const output = document.getElementById("codeOutput");
+        if (output) output.textContent = "";
+    }
+};
