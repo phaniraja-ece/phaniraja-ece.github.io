@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCD I²C Designer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+     <h1>🧱 LCD Character Designer</h1> 
+	
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="slot">Slot:</label>
+        <select id="slot"></select>
+      </div>
+
+      <div class="control-group">
+        <label for="color">Color:</label>
+        <select id="color">
+          <option value="green">Green</option>
+          <option value="black">Black</option>
+          <option value="white">White</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
+      
+      <button onclick="generateCode()">Generate</button>
+	  <button onclick="copyCode()">📋 Copy</button> 
+      
+	 
+	  
+    </div>
+
+    <div id="grid"></div>
+
+	 <h2>🧠 Arduino Code</h2>
+    <pre id="codeOutput">// Code will appear here...</pre>
+
+    <script src="script.js"></script>
+  </div>
+</body>
+</html>

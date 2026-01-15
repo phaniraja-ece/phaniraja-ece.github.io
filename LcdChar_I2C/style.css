@@ -1,0 +1,101 @@
+body {
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 1em;
+  margin: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+
+/* The label styles you requested */
+label {
+  margin-right: 0.5em;
+  font-weight: bold;
+  color: #58a6ff;
+}
+
+.controls {
+  margin-bottom: 1.5em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+select, button {
+  padding: 0.8em;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #21262d;
+  color: white;
+}
+
+button {
+  background-color: #2ea44f;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1 1 auto;
+  min-width: 120px;
+  transition: transform 0.1s;
+}
+
+button:active { transform: scale(0.95); }
+
+/* Grid Scaling for Mobile */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(5, var(--pixel-size, 45px));
+  grid-template-rows: repeat(8, var(--pixel-size, 45px));
+  gap: 4px;
+  justify-content: center;
+  margin: 1em auto;
+  touch-action: manipulation; 
+}
+
+.pixel {
+  width: 100%;
+  height: 100%;
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+}
+
+/* Colors */
+.pixel.on.green { background-color: #2ea44f; box-shadow: 0 0 5px #2ea44f; }
+.pixel.on.black { background-color: #000000; border: 1px solid #30363d; }
+.pixel.on.white { background-color: #ffffff; box-shadow: 0 0 5px #ffffff; }
+.pixel.on.blue  { background-color: #58a6ff; box-shadow: 0 0 5px #58a6ff; }
+
+/* Mobile Viewport Logic */
+@media (max-width: 480px) {
+  :root { --pixel-size: 16vw; }
+  .controls { flex-direction: column; }
+  .control-group { width: 100%; justify-content: space-between; }
+  pre { font-size: 0.85rem; }
+}
+
+pre {
+  background-color: #161b22;
+  padding: 1em;
+  text-align: left;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border: 1px solid #30363d;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+}
