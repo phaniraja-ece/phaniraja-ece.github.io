@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCD Character Designer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔲 LCD Designer</h1>
+    <p>Create custom 5x8 characters for 16x2 LCD modules</p>
+
+    <div class="controls-row">
+      <div class="setting">
+        <label>Slot:</label>
+        <select id="slotSelect">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select>
+      </div>
+      <div class="setting">
+        <label>Color:</label>
+        <select id="colorSelect" onchange="updatePixelColors()">
+          <option value="#2ea44f">Green</option>
+          <option value="#000000">Black</option>
+          <option value="#ffffff">White</option>
+          <option value="#58a6ff">Blue</option>
+        </select>
+      </div>
+      <button onclick="updateCode()">Generate</button>
+      <button onclick="copyCode()" id="copyBtn">📋 Copy</button>
+      <button onclick="invertGrid()">Invert</button>
+      <button onclick="clearGrid()">🗑️ Clear Grid</button>
+    </div>
+
+    <div class="grid" id="lcdGrid"></div>
+
+    <h2>🧠 Arduino Code</h2>
+    <div class="output-container">
+      <textarea id="output" rows="10" readonly placeholder="Click 'Generate' to see the code..."></textarea>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

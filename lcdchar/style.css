@@ -1,0 +1,122 @@
+body {
+  background: #0D1117;
+  color: #C9D1D9;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #58a6ff;
+  font-weight: bold;
+}
+
+select {
+  background: #161B22;
+  color: white;
+  border: 1px solid #30363D;
+  padding: 8px;
+  border-radius: 6px;
+  outline: none;
+}
+
+button {
+  background-color: #2ea44f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.1s;
+}
+
+button:hover { background-color: #22863a; }
+button:active { transform: scale(0.95); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 40px);
+  grid-template-rows: repeat(8, 40px);
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.grid div {
+  width: 40px;
+  height: 40px;
+  background: #161B22;
+  border: 1px solid #30363D;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* textarea {
+  width: 100%;           /* Fills the container horizontally by default */
+  /* max-width: 100%;       /* Prevents it from breaking the layout when resized */
+ /* height: 400px;         /* Increased initial vertical size */
+  /* background: #161B22;
+  color: #C9D1D9;
+  border: 1px solid #30363D;
+  border-radius: 8px;
+  padding: 1.5em;        /* Increased padding for a "bigger" feel */
+  /* font-family: monospace;
+  font-size: 1.1em;      /* Slightly larger font for readability */
+  /* margin-top: 1em;
+  
+  /* Enabling free resizing */
+  /* resize: both;          /* Allows resizing horizontally and vertically */
+  /* overflow: auto;        /* Ensures scrollbars appear if needed when resized */
+  /* display: block;        /* Helps with consistent sizing */
+ /*  margin-left: auto;
+  margin-right: auto;
+} */
+
+textarea {
+  width: 100%;           /* Fills the container width by default */
+  max-width: 900px;      /* Matches the maximum width of your container */
+  height: 350px;         /* Sets a large default height */
+  background: #161B22;   /* Matches the dark theme background */
+  color: #C9D1D9;        /* Matches the theme text color */
+  border: 1px solid #30363D;
+  border-radius: 8px;
+  padding: 1.5em;        /* Increases internal spacing for readability */
+  font-family: monospace;
+  font-size: 1.1em;      /* Slightly larger font for better code scannability */
+  margin-top: 1em;
+  
+  /* Enable user resizing in all directions */
+  resize: both;          
+  overflow: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
