@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  function invertGrid() {
+function invertGrid() {
   [...grid.children].forEach(cell => cell.classList.toggle("active"));
   updateCode();
 }
@@ -123,4 +123,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 });
+
 
