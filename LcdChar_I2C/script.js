@@ -64,14 +64,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // --- NEW INVERT GRID FUNCTION ---
+  window.invertGrid = function() {
+    // Loop through every row and column of the current slot
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 5; col++) {
+        // Flip the boolean value (true becomes false, false becomes true)
+        slots[currentSlot][row][col] = !slots[currentSlot][row][col];
+      }
+    }
+    // Refresh the visual grid
+    renderGrid();
+    
+    // Auto-update the code if code is already generated
+    if (codeOutput && codeOutput.textContent !== "") {
+      window.generateCode();
+    }
+  };
+
   // --- FIXED CLEAR FUNCTION ---
   window.clearCurrentSlot = function() {
     if (confirm("Clear this character slot?")) {
-      // Reset the current slot data to all false
       slots[currentSlot] = Array.from({ length: 8 }, () => Array(5).fill(false));
-      // Immediately refresh the visual grid
       renderGrid();
-      // Clear the code output text
       if (codeOutput) codeOutput.textContent = "";
     }
   };
@@ -89,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         return `B${value.toString(2).padStart(5, '0')}`;
       });
-      code += `\nbyte customChar${s}[8] = {\n  ${rows.join(',\n   ')}\n};\n`;
+      code += `\nbyte customChar${s}[8] = {\n  ${rows.join(',\n    ')}\n};\n`;
     }
 
     code += `\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n`;
@@ -107,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
     code += `}\n\nvoid loop() {}`;
 
     codeOutput.textContent = code;
-    codeOutput.scrollIntoView({ behavior: 'smooth' });
   };
 
   // Copy code to clipboard
@@ -118,6 +132,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 });
-
-
-
