@@ -76,11 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-function invertGrid() {
-  [...grid.children].forEach(cell => cell.classList.toggle("active"));
-  updateCode();
-}
-
   // Generate Arduino code
   window.generateCode = function () {
     saveSlot(currentSlot);
@@ -123,5 +118,6 @@ function invertGrid() {
     });
   };
 });
+
 
 
