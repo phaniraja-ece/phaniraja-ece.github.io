@@ -1,0 +1,116 @@
+body {
+  background: #0D1117;
+  color: #C9D1D9;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 1em; /* Reduced padding for mobile */
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.5em; /* Slightly smaller for mobile */
+  margin-bottom: 0.2em;
+}
+
+p {
+  font-size: 1em;
+  margin-bottom: 1.2em;
+}
+
+.card {
+  background: #161B22;
+  padding: 1.5em; /* Reduced padding */
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  margin-bottom: 1.5em;
+  box-sizing: border-box; /* Ensures padding doesn't break width */
+}
+
+input[type="file"],
+select,
+input[type="range"] {
+  width: 100%;
+  margin: 0.5em 0;
+  padding: 0.8em; /* Larger tap targets for fingers */
+  border-radius: 6px;
+  border: none;
+  background: #0D1117;
+  color: #C9D1D9;
+  box-sizing: border-box;
+}
+
+.controls {
+  text-align: left;
+  margin-top: 1em;
+}
+
+.controls label {
+  display: block;
+  margin: 0.8em 0 0.3em;
+}
+
+/* Checkbox alignment for thumbs */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.buttons {
+  margin-top: 1.5em;
+  display: flex; /* Stack buttons or side-by-side */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button {
+  flex: 1; /* Make buttons grow to fill space */
+  min-width: 120px;
+  background-color: #2ea44f;
+  color: white;
+  font-weight: bold;
+  padding: 0.8em; /* Larger for mobile */
+  margin: 5px;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Prevent canvas from overflowing screen */
+canvas {
+  margin: 1em auto;
+  display: block;
+  border: 1px solid #C9D1D9;
+  max-width: 100%; 
+  height: auto; /* Maintains aspect ratio */
+  image-rendering: pixelated; /* Keeps pixel art sharp */
+}
+
+textarea {
+  width: 100%;
+  background: #161B22;
+  color: #C9D1D9;
+  border: 1px solid #30363D;
+  border-radius: 8px;
+  padding: 1em;
+  font-family: monospace;
+  box-sizing: border-box;
+  font-size: 0.9em; /* Smaller text for large arrays */
+}
+
+/* Tablet and Desktop adjustments */
+@media (min-width: 600px) {
+  h1 { font-size: 2em; }
+  body { padding: 2em; }
+  .card { padding: 2em; }
+  button { flex: none; width: auto; }
+}
